@@ -147,7 +147,7 @@ FROM student AS s;
 
 \begin{frame}[fragile]{1(c).\ Loan duration from a single table (returned only)}
 \small
-\begin{lstlisting}[style=sqlcompact]  % compact style avoids wrapping/overflow
+\begin{lstlisting}[style=sqlcompact]
 SELECT l.book, l.returned - l.borrowed + 1 AS duration
 FROM loan AS l
 WHERE l.returned IS NOT NULL
