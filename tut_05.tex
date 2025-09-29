@@ -185,52 +185,80 @@ WHERE s2.email = l2.owner
 
 % ------------------------
 \section{Universal Quantification}
+
 \begin{frame}[fragile]{2(a).\ Borrowed all books by Adam Smith}
-\textbf{SQL Nested Query:}
+\textbf{SQL Nested Query (Corrected):}
 \begin{lstlisting}
 SELECT s.email, s.name
 FROM student s
 WHERE NOT EXISTS (
-  SELECT *
+  SELECT 1
   FROM book b
-  WHERE authors = 'Adam Smith'
+  WHERE b.authors = 'Adam Smith'
     AND NOT EXISTS (
-      SELECT *
+      SELECT 1
       FROM loan l
       WHERE l.book = b.ISBN13
         AND l.borrower = s.email));
 \end{lstlisting}
+\textit{Idea:} For each student, check that there is no Adam Smith book that they have not borrowed.
 \end{frame}
 
 \begin{frame}{2(a).\ Relational Algebra Strategy}
 \small
-Break into subproblems:
+Break the problem into steps (universal quantification via set difference):
+
 \begin{enumerate}
-  \item Q1: ISBN13 of all Adam Smith books.
-  \item Q2: All combinations of students × Q1.
-  \item Q3: Students who borrowed Adam Smith books.
-  \item Q4: Students in Q2 − Q3.
-  \item Q5: All students − Q4 (final answer).
+  \item \textbf{Find all Adam Smith books.}  
+    \[
+      Q1 = \pi_{\text{ISBN13}}
+           (\sigma_{\text{authors = 'Adam Smith'}}(\text{book}))
+    \]
+
+  \item \textbf{Form all possible student–book pairs (expected borrowings).}  
+    \[
+      Q2 = \pi_{\text{email, name, ISBN13}}(\text{student} \times Q1)
+    \]
+
+  \item \textbf{Find actual borrowings of Adam Smith books.}  
+    \[
+      Q3 = \pi_{\text{email, name, ISBN13}}
+           (\text{student} \bowtie \text{loan} \bowtie
+            \sigma_{\text{authors='Adam Smith'}}(\text{book}))
+    \]
+
+  \item \textbf{Identify missing borrowings (pairs in Q2 but not in Q3).}  
+    \[
+      Q4 = Q2 - Q3
+    \]
+
+  \item \textbf{Remove students in Q4 from the set of all students.}  
+    \[
+      Q5 = \pi_{\text{email, name}}(\text{student}) -
+           \pi_{\text{email, name}}(Q4)
+    \]
 \end{enumerate}
+
+\textbf{Answer:} $Q5$ = students who borrowed \emph{all} Adam Smith books.
 \end{frame}
 
 \begin{frame}[fragile]{2(a).\ SQL from Relational Algebra}
 \begin{lstlisting}
-SELECT s3.email, s3.name
-FROM student s3
+SELECT s.email, s.name
+FROM student s
 EXCEPT
-SELECT tmp.email, tmp.name
+SELECT t.email, t.name
 FROM (
   SELECT s1.email, s1.name, b1.ISBN13
   FROM student s1, book b1
   WHERE b1.authors = 'Adam Smith'
   EXCEPT
   SELECT s2.email, s2.name, b2.ISBN13
-  FROM student s2, book b2, loan l2
+  FROM student s2
+       JOIN loan l2 ON s2.email = l2.borrower
+       JOIN book b2 ON b2.ISBN13 = l2.book
   WHERE b2.authors = 'Adam Smith'
-    AND s2.email = l2.borrower
-    AND b2.ISBN13 = l2.book
-) AS tmp;
+) AS t;
 \end{lstlisting}
 \end{frame}
 
