@@ -163,7 +163,7 @@ BEGIN
       WHERE l.book=c.book
         AND l.copy=c.copy
         AND l.owner=c.owner
-        AND l.returned ISNULL)
+        AND l.returned IS NULL)
   LIMIT 1;
 \end{lstlisting}
 
