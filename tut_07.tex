@@ -43,7 +43,7 @@
 \usepackage{SHU}
 \input{macros}
 
-\title{BT5110: Tutorial 3 — Functional Dependencies}
+\title{IT5008: Tutorial 7 — Functional Dependencies}
 \author{\href{https://pratik2358.github.io/}{Pratik Karmakar}}
 \institute{School of Computing,\\ National University of Singapore}
 \date{AY25/26 S1}
@@ -57,7 +57,7 @@
     \end{figure}
   }{}
 \end{frame}
-\include{tut_03_example}
+\include{tut_07_example}
 
 \section{Armstrong's Axioms}
 \begin{frame}{Rules for Functional Dependencies (Armstrong's Axioms)}
@@ -203,7 +203,7 @@ Keys are \alert{$\{A,B,F\}$} and \alert{$\{B,C,E,F\}$}. Prime attributes are tho
 \end{frame}
 
 \begin{frame}[fragile]{Question 2.a. \; Minimal cover of $R$ with $\Sigma$}
-\footnotesize
+\tiny
 \begin{columns}
 \begin{column}{0.30\textwidth}
 \textbf{Start from $\Sigma$:}\\
@@ -243,7 +243,7 @@ Keys are \alert{$\{A,B,F\}$} and \alert{$\{B,C,E,F\}$}. Prime attributes are tho
 \{F\} \to \{H\},\\
 \{C,E\} \to \{A\},\\
 \{B,C,E\} \to \{D\},\\
-\cancel{\textcolor{gray}{\{A,B,F\} \to \{D\}}}\text{ because } \{A,B\} \to \{D\}\\
+\{A,B,\cancel{F}\} \to \{D\}\text{ because } \{A,B\} \to \{D\}\\
 \{A,B,F\} \to \{G\},\\
 \{B,C,E,F\} \to \{G\}.
 \)
@@ -258,18 +258,20 @@ Keys are \alert{$\{A,B,F\}$} and \alert{$\{B,C,E,F\}$}. Prime attributes are tho
         \(
 \{A\} \to \{C\},\\
 \{A\} \to \{E\},\\
-\cancel{\textcolor{gray}{\{A,B\} \to \{D\}}}\tiny\text{ because }\{A\}\to\{C,E\} \text{ and } \{B,C,E\}\to\{D\},\\
+\cancel{\textcolor{gray}{\{A,B\} \to \{D\}}}\tiny\text{ Already exists (repetition)},\\
 \normalsize
 \{F\} \to \{H\},\\
 \{C,E\} \to \{A\},\\
 \{B,C,E\} \to \{D\},\\
-\cancel{\textcolor{gray}{\{A,B,F\} \to \{G\}}}\tiny\text{ because }\{A\}\to\{C,E\} \text{ and } \{B,C,E\}\to\{D\},\\
+\cancel{\textcolor{gray}{\{A,B\} \to \{D\}}}\tiny\text{ because }\{A\}\to\{C,E\} \text{ and } \{B,C,E\}\to\{D\},\\
+\normalsize
+\cancel{\textcolor{gray}{\{A,B,F\} \to \{G\}}}\tiny\text{ because }\{A\}\to\{C,E\} \text{ and } \{B,C,E,F\}\to\{G\},\\
 \normalsize
 \{B,C,E,F\} \to \{G\}.
 \)
     \end{column}
     \begin{column}{0.5\textwidth}
-        \textcolor{red}{Minimal Cover}\\
+        \textcolor{red}{Canonical Cover}\\
 \(
 \{A\} \to \{C\},\\
 \{A\} \to \{E\},\\ 
@@ -283,12 +285,12 @@ Keys are \alert{$\{A,B,F\}$} and \alert{$\{B,C,E,F\}$}. Prime attributes are tho
 \medskip
 \scriptsize
 \pause
-(Alternative minimal covers exist, e.g., replace $\{B,C,E\} \to \{D\}$ by $\{A,B\} \to \{D\}$ and $\{B,C,E,F\} \to \{G\}$ by $\{A,B,F\} \to \{G\}$.) \hfill
+(Alternative canonical covers exist, e.g., replace $\{B,C,E\} \to \{D\}$ by $\{A,B\} \to \{D\}$ and $\{B,C,E,F\} \to \{G\}$ by $\{A,B,F\} \to \{G\}$.) \hfill
 \end{frame}
 
-\begin{frame}[fragile]{Question 2.b. \; Canonical cover (merged by LHS)}
+\begin{frame}[fragile]{Question 2.b. \; Compact Minimal Cover (merged by LHS)}
 \small
-One canonical cover (aka \textcolor{teal}{Compact Minimal Cover}) (grouping by identical LHS) is:\\
+One Compact Minimal Cover (grouping by identical LHS) is:\\
 \(
 \{A\} \to \{C,E\},\\ 
 \{F\} \to \{H\},\\ 
@@ -300,7 +302,7 @@ One canonical cover (aka \textcolor{teal}{Compact Minimal Cover}) (grouping by i
 \medskip
 \scriptsize
 \pause
-Other canonical covers are possible depending on which equivalent minimal cover you merge.
+Other minimal covers are possible depending on which equivalent canonical cover you merge.
 \end{frame}
 
 \begin{frame}
